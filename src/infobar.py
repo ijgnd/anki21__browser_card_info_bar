@@ -68,7 +68,7 @@ def addInfoBar(self):
         t = "<b>" + l[1] + "</b>"  # increaes height noticeable
         l[0].setText(t) 
         #l[0].setStyleSheet('background-color: rgb(100, 10, 1);')
-        l[6].setAlignment(QtCore.Qt.AlignLeft | QtCore.Qt.AlignVCenter)  # looks strange
+        l[6].setAlignment(QtCore.Qt.AlignLeft | QtCore.Qt.AlignVCenter)
         self.form.infogrid.addWidget(l[0], l[2], l[3], l[4], l[5])
         self.form.infogrid.addWidget(l[6], l[8], l[9], l[10], l[11])
     

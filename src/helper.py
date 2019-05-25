@@ -36,17 +36,12 @@ def stattime(tm):
 
 def is_early_review_then_return_percentage_interval(card):
     due = card.odue if card.odid else card.due
-    print('///////////////')
-    print(due)
     if not due > mw.col.sched.today:
-        print('a1')
         return False
     else:
         if card.queue == 1:  #learn
-            print('a2')
             return False
         elif card.queue == 0 and card.type == 0:   #new
-            print('a3')
             return False
         else:
             try:

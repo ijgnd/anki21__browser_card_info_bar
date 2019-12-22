@@ -1,37 +1,13 @@
-"""
-Anki Add-on "Card Info Bar for Browser"
+# License: GNU AGPL, version 3 or later; http://www.gnu.org/licenses/agpl.html, Copyright: see __init__.py
 
-Copyright (c):
-- 2019 ijgnd
-- 2017 Luminous Spice ("Infobar: another toolbar for Anki 2.1 beta")
-       https://github.com/luminousspice/anki-addons/
-       https://ankiweb.net/shared/info/1955978390
-- hssm
-- Ankitects Pty Ltd and contributors
-
-This program is free software: you can redistribute it and/or modify
-it under the terms of the GNU Affero General Public License as
-published by the Free Software Foundation, either version 3 of the
-License, or (at your option) any later version.
-
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU Affero General Public License for more details.
-
-You should have received a copy of the GNU Affero General Public License
-along with this program.  If not, see <https://www.gnu.org/licenses/>.
-"""
-
-
-from aqt import mw
-from aqt.qt import *
-from PyQt5 import QtWidgets, QtCore
-from aqt.forms.browser import Ui_Dialog
-from aqt.browser import Browser
 from anki.sched import Scheduler
 from anki.utils import ids2str, intTime, fmtTimeSpan
 from anki.hooks import addHook, wrap
+
+from aqt import mw
+from aqt.qt import *
+from aqt.forms.browser import Ui_Dialog
+from aqt.browser import Browser
 
 from .card_properties import cardstats
 
@@ -44,8 +20,8 @@ def addInfoBar(self):
     a = ["added","fr","lr","due","ivl","ease","revs","laps","avTime",
             "cardType","noteType","Deck", "nid", "cid"] 
     for i in a:
-        setattr(self,"il_" + i,QtWidgets.QLabel(self))
-        setattr(self,"i_" + i,QtWidgets.QLabel(self))
+        setattr(self,"il_" + i,QLabel(self))
+        setattr(self,"i_" + i,QLabel(self))
 
     g = [
         #      0                1           2  3  4  5      6            7   8  9 10 11
@@ -68,7 +44,7 @@ def addInfoBar(self):
         t = "<b>" + l[1] + "</b>"  # increaes height noticeable
         l[0].setText(t) 
         #l[0].setStyleSheet('background-color: rgb(100, 10, 1);')
-        l[6].setAlignment(QtCore.Qt.AlignLeft | QtCore.Qt.AlignVCenter)
+        l[6].setAlignment(Qt.AlignLeft | Qt.AlignVCenter)
         self.form.infogrid.addWidget(l[0], l[2], l[3], l[4], l[5])
         self.form.infogrid.addWidget(l[6], l[8], l[9], l[10], l[11])
     
@@ -104,8 +80,8 @@ def update(self):
 
 def setupUi(self, Dialog):
     self.verticalLayout_2.removeWidget(self.tableView)
-    self.infogrid = QtWidgets.QGridLayout()
-    self.infowidget = QtWidgets.QWidget()
+    self.infogrid = QGridLayout()
+    self.infowidget = QWidget()
     self.infowidget.setLayout(self.infogrid)
     if not gc("enable by default"):
         self.infowidget.setVisible(False)
@@ -132,7 +108,7 @@ def onSetupMenus(self):
     try:
         m = self.menuView
     except:
-        self.menuView = QMenu(_("&View"))
+        self.menuView = QMenu("&View")
         action = self.menuBar().insertMenu(
             self.mw.form.menuTools.menuAction(), self.menuView)
         m = self.menuView

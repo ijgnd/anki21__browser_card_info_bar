@@ -1,4 +1,4 @@
-# -*- coding: utf-8 -*-
+# License: GNU AGPL, version 3 or later; http://www.gnu.org/licenses/agpl.html, Copyright: see __init__.py
 
 import time
 from types import SimpleNamespace
@@ -61,6 +61,7 @@ def cardstats(self,card):
     o["Deck"]         = mw.col.decks.name(card.did)
     o["NoteID"]       = card.nid
     o["CardID"]       = card.id
+    o["CardOrd"]      = card.ord
 
     if card.odid:
         o["source_deck_name"] = mw.col.decks.get(card.odid)['name']
@@ -74,5 +75,5 @@ def cardstats(self,card):
     o["is_early_review_then_percentage_interval"] = is_early_review_then_return_percentage_interval(card)
     
     for k,v in o.items():
-        o[k] = str(v) + '  '
+        o[k] = str(v)
     return SimpleNamespace(**o)

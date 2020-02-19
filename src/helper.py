@@ -21,8 +21,11 @@ def due_day(card):
                 mydue = card.odue
             else:
                 mydue = card.due
-    return time.strftime("%Y-%m-%d", time.localtime(mydue)) 
-
+    try:
+        out = time.strftime("%Y-%m-%d", time.localtime(mydue)) 
+    except:
+        out = ""
+    return out
 
 #function time from anki/stats.py
 def stattime(tm):

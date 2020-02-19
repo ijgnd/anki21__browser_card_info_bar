@@ -1,4 +1,5 @@
 {
-    "show_infobox":"Alt+ö",
-    "enable by default":false
+    "enable by default":false,
+    "narrow info bar when editor by the side": true,
+    "show_infobox":"Alt+ö"
 } 

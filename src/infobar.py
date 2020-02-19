@@ -30,7 +30,7 @@ Browser.editor_by_the_side = editor_by_the_side
 
 
 def addInfoBar(self):
-    if self.editor_by_the_side():
+    if self.editor_by_the_side() and gc("narrow info bar when editor by the side"):
         self.addInfoBar_narrow()
     else:
         self.addInfoBar_default()
@@ -120,7 +120,7 @@ Browser.addInfoBar_default = addInfoBar_default
 
 
 def updateInfoBar(self):
-    if self.editor_by_the_side():
+    if self.editor_by_the_side() and gc("narrow info bar when editor by the side"):
         updateInfoBar_narrow(self)
     else:
         updateInfoBar_default(self)

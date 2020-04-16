@@ -1,7 +1,7 @@
 # License: GNU AGPL, version 3 or later; http://www.gnu.org/licenses/agpl.html, Copyright: see __init__.py
 
 from anki.sched import Scheduler
-from anki.utils import ids2str, intTime, fmtTimeSpan
+from anki.utils import ids2str, intTime
 from anki.hooks import addHook, wrap
 
 from aqt import mw

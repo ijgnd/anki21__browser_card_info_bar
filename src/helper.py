@@ -3,7 +3,6 @@
 import time
 
 from aqt import mw
-from anki.utils import fmtTimeSpan
 
 
 def due_day(card):
@@ -26,15 +25,6 @@ def due_day(card):
     except:
         out = ""
     return out
-
-#function time from anki/stats.py
-def stattime(tm):
-    str = ""
-    if tm >= 60:
-        str = fmtTimeSpan((tm/60)*60, short=True, point=-1, unit=1)
-    if tm%60 != 0 or not str:
-        str += fmtTimeSpan(tm%60, point=2 if not str else -1, short=True)
-    return str
 
 
 def is_early_review_then_return_percentage_interval(card):

@@ -11,8 +11,7 @@ from .helper import due_day, is_early_review_then_return_percentage_interval
 def cardstats(self,card):
     #from anki.stats.py
     (cnt, total) = mw.col.db.first(
-            "select count(), sum(time)/1000 from revlog where cid = :id",
-            id=card.id)
+        "select count(), sum(time)/1000 from revlog where cid = ?", card.id)
     first = mw.col.db.scalar(
         "select min(id) from revlog where cid = ?", card.id)
     last = mw.col.db.scalar(

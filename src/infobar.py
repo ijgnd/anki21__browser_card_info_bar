@@ -1,36 +1,40 @@
-# License: GNU AGPL, version 3 or later; http://www.gnu.org/licenses/agpl.html, Copyright: see __init__.py
+# License: GNU AGPL, version 3 or later; http://www.gnu.org/licenses/agpl.html
+# Copyright: see __init__.py
 
 from anki.sched import Scheduler
 from anki.utils import ids2str, intTime
 from anki.hooks import addHook, wrap
 
 from aqt import mw
-from aqt.qt import *
+from aqt.qt import (
+    QGridLayout,
+    QLabel,
+    QKeySequence,
+    Qt,
+    QWidget,
+)
 from aqt.forms.browser import Ui_Dialog
 from aqt.browser import Browser
 
 from .card_properties import cardstats
+from .toolbar import getMenu
 
 
-def gc(arg,fail=False):
-    return mw.addonManager.getConfig(__name__).get(arg,fail)
+def gc(arg, fail=False):
+    conf = mw.addonManager.getConfig(__name__)
+    if conf:
+        return conf.get(arg, fail)
+    else:
+        return fail
 
 
 def editor_by_the_side(self):
-    # better compatibility with "browser side-by-side (horizontal split)"
-    # https://ankiweb.net/shared/info/831846358
-    try:
-        if self.side_by_side:
-            return True
-        else:
-            return False
-    except:
-        return False
-Browser.editor_by_the_side = editor_by_the_side
+    if self.form.splitter.orientation() == Qt.Horizontal:
+        return True
 
 
 def addInfoBar(self):
-    if self.editor_by_the_side() and gc("narrow info bar when editor by the side"):
+    if editor_by_the_side(self) and gc("narrow info bar when editor by the side"):
         self.addInfoBar_narrow()
     else:
         self.addInfoBar_default()
@@ -61,17 +65,20 @@ def addInfoBar_narrow(self):
 
     for l in g:
         t = "<b>" + l[1] + "</b>"  # increases height noticeably
-        l[0].setText(t) 
+        l[0].setText(t)
+        l[6].setWordWrap(True)
         #l[0].setStyleSheet('background-color: rgb(100, 10, 1);')
         l[6].setAlignment(Qt.AlignLeft | Qt.AlignVCenter)
         self.form.infogrid.addWidget(l[0], l[2], l[3], l[4], l[5])
         self.form.infogrid.addWidget(l[6], l[8], l[9], l[10], l[11])
+    self.form.infogrid.setColumnStretch(0,0)
+    self.form.infogrid.setColumnStretch(1,3)
 Browser.addInfoBar_narrow = addInfoBar_narrow
 
 
 def addInfoBar_default(self):
-    a = ["added","fr","lr","due","ivl","ease","revs","laps","avTime",
-            "cardType","noteType","Deck", "nid", "cid"] 
+    a = ["added", "fr", "lr", "due", "ivl","ease", "revs", "laps", "avTime",
+            "cardType", "noteType", "Deck", "nid", "cid"] 
     for i in a:
         setattr(self,"il_" + i, QLabel(self))
         setattr(self,"i_" + i, QLabel(self))
@@ -100,7 +107,8 @@ def addInfoBar_default(self):
 
     for l in g:
         t = "<b>" + l[1] + "</b>"  # increaes height noticeable
-        l[0].setText(t) 
+        l[0].setText(t)
+        l[0].setWordWrap(True)
         #l[0].setStyleSheet('background-color: rgb(100, 10, 1);')
         l[6].setAlignment(Qt.AlignLeft | Qt.AlignVCenter)
         self.form.infogrid.addWidget(l[0], l[2], l[3], l[4], l[5])
@@ -120,7 +128,7 @@ Browser.addInfoBar_default = addInfoBar_default
 
 
 def updateInfoBar(self):
-    if self.editor_by_the_side() and gc("narrow info bar when editor by the side"):
+    if editor_by_the_side(self) and gc("narrow info bar when editor by the side"):
         updateInfoBar_narrow(self)
     else:
         updateInfoBar_default(self)
@@ -191,16 +199,9 @@ Browser.toggle_infobox = toggle_infobox
 
 
 def onSetupMenus(self):
-    try:
-        m = self.menuView
-    except:
-        self.menuView = QMenu("&View")
-        action = self.menuBar().insertMenu(
-            self.mw.form.menuTools.menuAction(), self.menuView)
-        m = self.menuView
-
-    # a = m.addAction('toggle infobox')
-    # a.triggered.connect(self.toggle_infobox)
+    m = getMenu(self, "&View")
+    if not hasattr(self, "menuView"):
+        self.menuView = m
     a = m.addAction('show infobox')
     a.setCheckable(True)
     a.setChecked(gc("enable by default"))
@@ -209,5 +210,3 @@ def onSetupMenus(self):
     if cut:
         a.setShortcut(QKeySequence(cut))
 addHook("browser.setupMenus", onSetupMenus)
-
-

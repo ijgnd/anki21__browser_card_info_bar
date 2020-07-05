@@ -1,5 +1,6 @@
 {
-    "enable by default":false,
+    "enable by default": false,
+    "extra line for deck in wide mode": false,
     "narrow info bar when editor by the side": true,
-    "show_infobox":"Alt+ö"
+    "show_infobox": "Alt+ö"
 } 

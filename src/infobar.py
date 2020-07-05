@@ -66,6 +66,7 @@ def addInfoBar_narrow(self):
     for l in g:
         t = "<b>" + l[1] + "</b>"  # increases height noticeably
         l[0].setText(t)
+        # l[0].setWordWrap(True)
         l[6].setWordWrap(True)
         #l[0].setStyleSheet('background-color: rgb(100, 10, 1);')
         l[6].setAlignment(Qt.AlignLeft | Qt.AlignVCenter)
@@ -96,9 +97,22 @@ def addInfoBar_default(self):
         [self.il_cid,      'Card ID: ',     2, 4, 1, 1, self.i_cid,      "", 2, 5, 1, 1],
         [self.il_cardType, 'Card Type: ',   0, 6, 1, 1, self.i_cardType, "", 0, 7, 1, 1],
         [self.il_noteType, 'Note Type: ',   1, 6, 1, 1, self.i_noteType, "", 1, 7, 1, 2],
-        [self.il_Deck,     'Deck:      ',   2, 6, 1, 1, self.i_Deck,     "", 2, 7, 1, 2],
-        [self.il_avTime,   'AvgTime: ',     0, 8, 1, 1, self.i_avTime,   "", 0, 9, 1, 1],
+        
+        
     ]
+
+    if gc("extra line for deck in wide mode"):
+        last =  [
+            [self.il_Deck,     'Deck:      ',   3, 0, 1, 1, self.i_Deck,     "", 3, 1, 1, -1],
+            [self.il_avTime,   'AvgTime: ',     2, 6, 1, 1, self.i_avTime,   "", 2, 7, 1, 1],
+        ]  
+    else:
+        last = [
+            [self.il_Deck,     'Deck:      ',   2, 6, 1, 1, self.i_Deck,     "", 2, 7, 1, 2],
+            [self.il_avTime,   'AvgTime: ',     0, 8, 1, 1, self.i_avTime,   "", 0, 9, 1, 1],
+        ]
+    g.extend(last)
+
 
     while self.form.infogrid.count():
         item = self.form.infogrid.takeAt(0)
@@ -108,7 +122,8 @@ def addInfoBar_default(self):
     for l in g:
         t = "<b>" + l[1] + "</b>"  # increaes height noticeable
         l[0].setText(t)
-        l[0].setWordWrap(True)
+        # l[0].setWordWrap(True)
+        l[6].setWordWrap(True)
         #l[0].setStyleSheet('background-color: rgb(100, 10, 1);')
         l[6].setAlignment(Qt.AlignLeft | Qt.AlignVCenter)
         self.form.infogrid.addWidget(l[0], l[2], l[3], l[4], l[5])

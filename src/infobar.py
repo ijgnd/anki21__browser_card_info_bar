@@ -173,13 +173,15 @@ def updateInfoBar_default(self):
         p = self.cardstats(self.card)
         susp_col = "#aaaa33" if theme_manager.night_mode else "#FFFFB2"
         susp_col = susp_col if self.card.queue == -1 else "transparent"
-        lapse_col = "red" if self.card.lapses > 10 else "transparent"
+        lapse_col = "red" if self.card.lapses > gc("show bg color: lapses threshold", 10) else "transparent"
         try:
-            self.il_added.setStyleSheet(f'background-color: {susp_col}')
+            if gc("show bg color: suspended"):
+                self.il_added.setStyleSheet(f'background-color: {susp_col}')
             self.i_added.setText(p.Added)
             self.i_fr.setText(p.FirstReview) 
             self.i_lr.setText(p.LatestReview)
-            self.il_due.setStyleSheet(f'background-color: {lapse_col}')
+            if gc("show bg color: lapses"):
+                self.il_due.setStyleSheet(f'background-color: {lapse_col}')
             self.i_due.setText(p.Due)
             self.i_ivl.setText(p.Interval)
             self.i_ease.setText(p.Ease)

@@ -2,5 +2,8 @@
     "enable by default": false,
     "extra line for deck in wide mode": false,
     "narrow info bar when editor by the side": true,
-    "show_infobox": "Alt+ö"
+    "show_infobox": "Alt+ö",
+    "show bg color: lapses": false,
+    "show bg color: lapses threshold": 10,
+    "show bg color: suspended": false
 } 

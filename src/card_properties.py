@@ -4,11 +4,26 @@ import time
 from types import SimpleNamespace
 
 from aqt import mw
+from anki.utils import pointVersion
 
 from .helper import (
     due_day, 
     is_early_review_then_return_percentage_interval
 )
+
+
+def date(tm):
+    return time.strftime("%Y-%m-%d", time.localtime(tm))
+
+
+def format_time_helper(val):
+    # before 2.1.22 it was fmtTimeSpan
+    if pointVersion() > 28:
+        out = mw.col.format_timespan(val)
+    else:
+        out = mw.col.backend.format_time_span(val)
+    return out
+
 
 def cardstats(self,card):
     #from anki.stats.py
@@ -19,21 +34,18 @@ def cardstats(self,card):
     last = mw.col.db.scalar(
         "select max(id) from revlog where cid = ?", card.id)
 
-    def date(tm):
-        return time.strftime("%Y-%m-%d", time.localtime(tm))
-
     o = dict()
     #Card Stats as seen in Browser
     o["Added"]        = date(card.id/1000)
     o["FirstReview"]  = date(first/1000) if first else ""
     o["LatestReview"] = date(last/1000)if last else ""
     o["Due"]          = due_day(card)
-    o["Interval"]     = mw.col.backend.format_time_span(card.ivl * 86400) if card.queue == 2 else ""
+    o["Interval"]     = format_time_helper(card.ivl * 86400) if card.queue == 2 else ""
     o["Ease"]         = "%d%%" % (card.factor/10.0)
     o["Reviews"]      = "%d" % card.reps
     o["Lapses"]       = "%d" % card.lapses
-    o["AverageTime"]  = mw.col.backend.format_time_span(total / float(cnt)) if cnt else ""
-    o["TotalTime"]    = mw.col.backend.format_time_span(total) if cnt else ""
+    o["AverageTime"]  = format_time_helper(total / float(cnt)) if cnt else ""
+    o["TotalTime"]    = format_time_helper(total) if cnt else ""
     o["Position"]     = card.due if card.queue == 0 else ""
     o["CardType"]     = card.template()['name']
     o["NoteType"]     = card.model()['name']

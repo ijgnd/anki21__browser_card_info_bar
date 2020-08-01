@@ -5,8 +5,10 @@ from types import SimpleNamespace
 
 from aqt import mw
 
-from .helper import due_day, is_early_review_then_return_percentage_interval
-
+from .helper import (
+    due_day, 
+    is_early_review_then_return_percentage_interval
+)
 
 def cardstats(self,card):
     #from anki.stats.py

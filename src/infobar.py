@@ -31,13 +31,6 @@ def gc(arg, fail=False):
         return fail
 
 
-def get_suspended_color():
-    if theme_manager.night_mode:  # mw.pm.night_mode():
-        return "#aaaa33"
-    else:
-        return "#FFFFB2"
-
-
 def editor_by_the_side(self):
     if self.form.splitter.orientation() == Qt.Horizontal:
         return True
@@ -178,7 +171,8 @@ def updateInfoBar_narrow(self):
 def updateInfoBar_default(self):
     if self.card:
         p = self.cardstats(self.card)
-        susp_col = get_suspended_color() if self.card.queue == -1 else "transparent"
+        susp_col = "#aaaa33" if theme_manager.night_mode else "#FFFFB2"
+        susp_col = susp_col if self.card.queue == -1 else "transparent"
         lapse_col = "red" if self.card.lapses > 10 else "transparent"
         try:
             self.il_added.setStyleSheet(f'background-color: {susp_col}')

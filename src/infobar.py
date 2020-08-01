@@ -232,4 +232,6 @@ def onSetupMenus(self):
     cut = gc("show_infobox")
     if cut:
         a.setShortcut(QKeySequence(cut))
+    if gc("enable by default"):
+        toggle_infobox(self)
 addHook("browser.setupMenus", onSetupMenus)

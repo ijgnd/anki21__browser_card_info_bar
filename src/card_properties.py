@@ -13,7 +13,38 @@ from .helper import (
 
 
 def date(tm):
-    return time.strftime("%Y-%m-%d", time.localtime(tm))
+    # the argument tm will always be a float or int because the argument date gets is always the 
+    # result of a division and division only works on floats or ints. Originally the argument
+    # passed to this function was the result of a truediv (recently I changed to a floordiv).
+    # But this shouldn't make a difference because for time.localtime according to 
+    # https://docs.python.org/3/library/time.html: "Fractions of a second are ignored." 
+
+    # issue 5 is about this function returning "OSError: [Errno 22] Invalid argument"
+    # I'm not sure why this happens.
+    # https://stackoverflow.com/a/41400321 talks about a 2038 problem in Windows
+    # but this seems to be limited to 32 bit platforms, see https://docs.python.org/3/library/time.html
+    # and I tested in Win10(64bit) with Anki 2.1.35 where I can process values like 9999999999
+    # which returns 2286-11-20.
+    # But there are still alternative 32builds for windows available.
+    
+    # datetime doesn't seem to help, https://docs.python.org/3/library/datetime.html
+    # classmethod date.fromtimestamp(timestamp)
+    #   Return the local date corresponding to the POSIX timestamp, such as is returned by time.time().
+    #   This may raise OverflowError, if the timestamp is out of the range of values supported by 
+    #   the platform C localtime() function, and OSError on localtime() failure. It’s common for 
+    #   this to be restricted to years from 1970 through 2038. 
+
+    if tm > 2147483647:  #  03:14:08 UTC on 19 January 2038
+        # see https://en.wikipedia.org/wiki/Year_2038_problem
+        return "2038 or later"   
+    if tm < 0:
+        # time.strftime("%Y-%m-%d", time.localtime(-1)) works differently depending on the OS:
+        #    in Linux it returns "1970-01-01"
+        #    in Windows I get OSError: [Errno 22] Invalid argument
+        print(f'unexpected behavior in add-on "Card Info Bar": tm is int smaller than 0, its value is {str(tm)}')
+        return ""
+    else:
+        return time.strftime("%Y-%m-%d", time.localtime(tm))
 
 
 def format_time_helper(val):
@@ -36,9 +67,9 @@ def cardstats(self,card):
 
     o = dict()
     #Card Stats as seen in Browser
-    o["Added"]        = date(card.id/1000)
-    o["FirstReview"]  = date(first/1000) if first else ""
-    o["LatestReview"] = date(last/1000)if last else ""
+    o["Added"]        = date(card.id//1000)
+    o["FirstReview"]  = date(first//1000) if first else ""
+    o["LatestReview"] = date(last//1000) if last else ""
     o["Due"]          = due_day(card)
     o["Interval"]     = format_time_helper(card.ivl * 86400) if card.queue == 2 else ""
     o["Ease"]         = "%d%%" % (card.factor/10.0)
